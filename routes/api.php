@@ -2,7 +2,19 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\SavingController;
+use App\Http\Controllers\ProjectController; 
+use App\Http\Controllers\WalletController;   
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+
+Route::prefix("v0.1")->group(function(){
+    // Route for users
+    Route::resource("/users",UserController::class);
+    // Route for savings
+    Route::resource("/savings", SavingController::class);
+    // Route for projects
+    Route::resource("/projects",ProjectController::class);
+    // Route for wallets
+    Route::resource("/wallets",WalletController::class);
+});
