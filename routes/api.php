@@ -12,9 +12,9 @@ Route::prefix("v0.1")->group(function(){
     // Route for users
     // Route::get("/users",[UserController::class, "index"]);
     // Route for savings
-    // Route::get("/savings", [SavingController::class, "index"]);
+    Route::resource("/savings", SavingController::class);
     // Route for projects
-    Route::resource("/projects",ProjectController::class)->only(["index","store","show"]);
+    Route::resource("/projects",ProjectController::class);
     // Route for wallets
     Route::resource("/wallets",WalletController::class);
 });

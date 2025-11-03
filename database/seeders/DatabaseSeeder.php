@@ -17,11 +17,11 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
 
-        // $this->call(UserSeeder::class);
-        // $this->call(SavingSeeder::class);
+        $this->call(UserSeeder::class);
+        $this->call(SavingSeeder::class);
         $this->call(ProjectSeeder::class);
         $this->call(WalletSeeder::class);
-        // $this->call(ExpenseSeeder::class);
+        $this->call(ExpenseSeeder::class);
 
     }
 }
