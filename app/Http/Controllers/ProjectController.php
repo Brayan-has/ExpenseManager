@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Project;
+use App\Traits\Pagination;
 use App\Traits\Response;
 use App\Http\Requests\ProjectRequest;
 
@@ -9,30 +10,23 @@ use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
-    use Response;
+    use Response, Pagination;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        // get all projects with their wallets
         $projects = Project::with(["wallet:id,name,origin,quantity,project_id"])->paginate(10);
 
         $projects->select(["id","name","description","state","start_date","final_date"]);
        
-        //pagination 
-        $pagination = [
-            "projects" => $projects->items(),
-            "current_page" => $projects->currentPage(),
-            "per_page" => $projects->perPage(),
-            "total" => $projects->total(),
-            "next_page_url" => $projects->nextPageUrl(),
-            "prev_page_url" => $projects->previousPageUrl(),
-        ];
+        //pagination with Trait
+        $pagination = $this->paginateData($projects);
 
         // if there not projects found, show a message
         if($projects->isEmpty()){
-            return $this->EasyResponse("No projects found", 404);
+            return $this->noData("No projects found");
         }
      
        return $this->successResponse($pagination, "The list of projects");

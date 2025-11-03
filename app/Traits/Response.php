@@ -9,7 +9,7 @@ trait Response
     {
         return response()->json([
             "message" => $message,
-            "data" => $data
+            "content" => $data
         ], status: $code);
     }
 
