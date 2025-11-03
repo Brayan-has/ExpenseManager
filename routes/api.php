@@ -10,7 +10,7 @@ use App\Http\Controllers\WalletController;
 
 Route::prefix("v0.1")->group(function(){
     // Route for users
-    // Route::get("/users",[UserController::class, "index"]);
+    Route::resource("/users",UserController::class);
     // Route for savings
     Route::resource("/savings", SavingController::class);
     // Route for projects

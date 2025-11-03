@@ -16,17 +16,26 @@ class ProjectController extends Controller
     public function index()
     {
         //
-        $projects = Project::with(["wallet:id,name"])->get();
+        $projects = Project::with(["wallet:id,name,origin,quantity,project_id"])->paginate(10);
 
-        $projects->select("id","name","description","state","start_date","final_date");
+        $projects->select(["id","name","description","state","start_date","final_date"]);
        
-        // dd($projects);
+        //pagination 
+        $pagination = [
+            "projects" => $projects->items(),
+            "current_page" => $projects->currentPage(),
+            "per_page" => $projects->perPage(),
+            "total" => $projects->total(),
+            "next_page_url" => $projects->nextPageUrl(),
+            "prev_page_url" => $projects->previousPageUrl(),
+        ];
+
         // if there not projects found, show a message
         if($projects->isEmpty()){
             return $this->EasyResponse("No projects found", 404);
         }
      
-       return $this->successResponse($projects, "The list of projects");
+       return $this->successResponse($pagination, "The list of projects");
     }
 
     /**
