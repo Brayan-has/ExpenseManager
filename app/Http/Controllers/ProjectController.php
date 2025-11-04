@@ -45,36 +45,31 @@ class ProjectController extends Controller
 
         // if someting went wrong
         if(!$project){
-            return $this->easyResponse("Something went wrong", 500);
+            return $this->errorResponse("Something went wrong");
         }
 
          
-        return $this->easyResponse( "Project created successfully", 201);
-    }
-
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        return $this->easyResponse( "Project created successfully");
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ProjectRequest $request, string $id)
     {
         //
+        $validated = $request->validated();
+
+        // getting all projects by id
+        $project = Project::find($id);
+
+        if(!$project){
+            return $this->errorResponse("Project not found");
+        }
+
+        $project->fill($validated);
+        $project->save();
+        return $this->easyResponse("The project was updated correctly");
     }
 
     /**
@@ -82,6 +77,17 @@ class ProjectController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        // getting all projects by id
+        $project = Project::find($id);
+        
+        // if there's no project found
+        if(!$project){
+            return $this->errorResponse("Project not found");
+        }
+
+        $project->delete();
+
+        return $this->easyResponse("The project was delete it correctly");
+
     }
 }

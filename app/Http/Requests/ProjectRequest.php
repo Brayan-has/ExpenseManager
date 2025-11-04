@@ -32,6 +32,12 @@ class ProjectRequest extends FormRequest
                     "description" => "sometimes",
                     "state" => "required"
                     ];
+            case "update":
+                return [
+                    "name" => "sometimes",
+                    "description" => "sometimes",
+                    "state" => "sometimes"
+                    ];
             default:
                 return [
                     "name"=> "Some thing",
