@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Traits\Response;
 use App\Models\Saving;
 
 class SavingController extends Controller
 {
+    use Response;
     /**
      * Display a listing of the resource.
      */
@@ -15,6 +17,9 @@ class SavingController extends Controller
         //
         $saving = Saving::with(["user:id,name,lastname"])->get();
 
+        if(empty($saving)){
+            return $this->errorResponse("No savings found", 404);
+        }
         return response()->json([
             "message" => $saving
         ]);
