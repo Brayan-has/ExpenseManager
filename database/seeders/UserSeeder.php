@@ -15,4 +15,5 @@ class UserSeeder extends Seeder
     {
         User::factory(2)->create();
     }
+ 
 }
