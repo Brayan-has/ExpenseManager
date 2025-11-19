@@ -12,7 +12,7 @@ use Illuminate\Validation\ValidationException;
 
 // methdo not allowed
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
-// 
+ 
 use \BadMethodCallException;
 // 
 use Illuminate\Database\UniqueConstraintViolationException;
