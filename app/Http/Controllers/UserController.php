@@ -12,9 +12,8 @@ class UserController extends Controller
      */
     public function index()
     {
-     $users = User::with("project:id,name")->get();
-
-        return response()->json($users);
+     
+        
     }
 
     /**
