@@ -11,9 +11,7 @@ use Illuminate\Http\Request;
 class ProjectController extends Controller
 {
     use Response, Pagination;
-    /**
-     * Display a listing of the resource.
-     */
+   
     public function index()
     {
         // get all projects with their wallets

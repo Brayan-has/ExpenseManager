@@ -2,23 +2,30 @@
 
 namespace App\Http\Controllers;
 
-
-// documentation using swagger, this is the global config
-
 /**
  * @OA\Info(
- *  title="ExpendManager Docs",
- *  version=1.0.0,
+ *     version="0.1",
+ *     title="ExpendManager API",
+ *     description="Official documentation of pos sistem AxiomaPos"
  * )
- * @OA\SecurityScheme(
- *  type="http",
- *  securityScheme="baererAuth",
- *  scheme="baerer",
- *  bearerFormat="JWT"
+ * 
+ * @OA\OpenApi(
+ *   security={{"bearerAuth": {}}}
  * )
+ *
+ *  @OA\Server(url="http://127.0.0.1:8000/api/v0.1")
+ *
+ *  @OA\SecurityScheme(
+ *      securityScheme="bearerAuth",
+ *      type="http",
+ *      scheme="bearer",
+ *      bearerFormat="JWT",
+ *      description="put in here your token for try" 
+ * 
+ *  ) 
  */
+
 abstract class Controller
 {
-
     //
 }
