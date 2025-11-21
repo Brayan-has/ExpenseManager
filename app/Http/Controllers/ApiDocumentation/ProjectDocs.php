@@ -6,7 +6,7 @@ use OpenApi\Annotations as OA;
 
 
 
-class ProjectDocumentation
+class ProjectDocs
 {
      /**
      * @OA\Get(
