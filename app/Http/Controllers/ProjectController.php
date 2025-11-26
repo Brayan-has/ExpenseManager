@@ -5,6 +5,8 @@ use App\Models\Project;
 use App\Traits\Pagination;
 use App\Traits\Response;
 use App\Http\Requests\ProjectRequest;
+use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Cache;
 
 use Illuminate\Http\Request;
 
@@ -14,20 +16,35 @@ class ProjectController extends Controller
    
     public function index()
     {
-        // get all projects with their wallets
-        $projects = Project::with(["wallet:id,name,origin,quantity,project_id"])->paginate(10);
+        # Redis implementation
+        //get the current page
+        $page = request("page",1);
+        
+        // CacheKey
+        $cacheKey = "project_page_$page";
 
-        $projects->select(["id","name","description","state","start_date","final_date"]);
-       
-        //pagination with Trait
-        $pagination = $this->paginateData($projects);
+        //
+        $ttl = 60; 
+        
+        $pagination = Cache::remember($cacheKey, $ttl, function () {               
 
-        // if there not projects found, show a message
-        if($projects->isEmpty()){
+            // get all projects with their wallets
+            $projects = Project::with(["wallet:id,name,origin,quantity,project_id"])->
+            select(["id","name","description","state","start_date","final_date"])->paginate(10);
+        
+            // if there not projects found, show a message
+            if($projects->isEmpty()){
+                return $this->noData("No projects found");
+            }
+         
+            return $this->paginateData($projects);
+        });
+        
+        if (!$pagination) {
             return $this->noData("No projects found");
         }
-     
-       return $this->successResponse($pagination, "The list of projects");
+
+        return $this->successResponse($pagination, "The list of projects");
     }
 
     /**
