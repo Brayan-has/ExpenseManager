@@ -23,12 +23,26 @@ class WalletRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => 'required|string',
-            'origin' => 'required|string',
-            'quantity' => 'required|numeric',
-            'project_id' => 'required|exists:projects,id'
-        ];
+         $methods = $this->getActionMethod();
+
+        switch ($methods) {
+            case 'store':
+                return [
+                    "name" => "required",
+                    "origin" => "required",
+                    "quantity" => "required",
+                    "project_id" => "required|exists:projects,id"
+                    ];
+            case "update":
+                return [
+                    "name" => "sometimes",
+                    "origin" => "sometimes",
+                    "quantity" => "sometimes",
+                    "project_id" => "sometimes|exists:projects,id"
+                    ];
+            default:
+                return [];
+        }
     }
 
      protected function failedValidation(Validator $validator)

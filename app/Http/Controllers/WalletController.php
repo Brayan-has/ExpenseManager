@@ -68,7 +68,15 @@ class WalletController extends Controller
     {
         $wallet = Wallet::find($id);
         
+        if(!$wallet){
+            return $this->noData("Wallet not found");
+        }
         
+        $wallet->update($request->all());
+        Cache::tags(['wallets'])->flush();
+        $wallet->save();
+
+        return $this->successResponse(null,"Wallet updated successfully");
     }
 
     /**
@@ -76,6 +84,15 @@ class WalletController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $wallet = Wallet::find($id);
+        
+        if(!$wallet){
+            return $this->noData("Wallet not found");
+        }
+        
+        $wallet->delete();
+        Cache::tags(['wallets'])->flush();
+
+        return $this->successResponse(null,"Wallet deleted successfully");
     }
 }
