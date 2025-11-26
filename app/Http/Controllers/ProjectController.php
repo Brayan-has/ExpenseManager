@@ -5,7 +5,6 @@ use App\Models\Project;
 use App\Traits\Pagination;
 use App\Traits\Response;
 use App\Http\Requests\ProjectRequest;
-use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Cache;
 
 use Illuminate\Http\Request;
@@ -26,7 +25,7 @@ class ProjectController extends Controller
         //
         $ttl = 60; 
         
-        $pagination = Cache::remember($cacheKey, $ttl, function () {               
+        $pagination = Cache::tags(['projects'])->remember($cacheKey, $ttl, function () {               
 
             // get all projects with their wallets
             $projects = Project::with(["wallet:id,name,origin,quantity,project_id"])->
@@ -36,13 +35,13 @@ class ProjectController extends Controller
             if($projects->isEmpty()){
                 return $this->noData("No projects found");
             }
-         
+            
             return $this->paginateData($projects);
         });
         
         if (!$pagination) {
             return $this->noData("No projects found");
-        }
+        }        
 
         return $this->successResponse($pagination, "The list of projects");
     }
@@ -58,6 +57,7 @@ class ProjectController extends Controller
         //if the request is ok create the project 
         $project = Project::create($validated);
 
+        Cache::tags(['projects'])->flush();
         // if someting went wrong
         if(!$project){
             return $this->errorResponse("Something went wrong");
@@ -84,6 +84,10 @@ class ProjectController extends Controller
 
         $project->fill($validated);
         $project->save();
+
+        Cache::tags(['projects'])->flush();
+
+
         return $this->easyResponse("The project was updated correctly");
     }
 

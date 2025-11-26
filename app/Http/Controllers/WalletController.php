@@ -3,27 +3,41 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use App\Models\Wallet;
+use App\Traits\Pagination;
 use App\Traits\Response;
 use App\Http\Requests\WalletRequest;
 
 class WalletController extends Controller
 {
-    use Response;
+    use Response, Pagination;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
-        $wallet = Wallet::all();
 
-        // If there's no data show an error message
-        
-        if ($wallet->isEmpty()){
-            return $this->noData("No wallets found");
-        }
-        return $this->successResponse($wallet,"Listo of wallets");
+        // key of the cache for wallets 
+        $walletKey = "wallet_all";
+
+        $ttl = 60; // Time to live in seconds
+
+        $wallet = Cache::tags(['wallets'])->remember($walletKey, $ttl, function(){
+
+            // return $wallet;
+            $wallet = Wallet::paginate(10);
+    
+            $wallet = $this->paginateData($wallet);
+            // If there's no data show an error message
+            
+            if (!$wallet){
+                return $this->noData("No wallets found");
+            }
+            return $wallet;
+        });
+
+        return $this->successResponse($wallet,"List of wallets");
         
     }
 
@@ -36,6 +50,7 @@ class WalletController extends Controller
         $validated = $request->validated();
         
         $wallet = Wallet::create($validated);
+        Cache::tags(['wallets'])->flush();
         
         if(!$wallet){
             return $this->errorResponse("Failed to create wallet");
@@ -45,28 +60,15 @@ class WalletController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
     {
-        // return response()->json(['message' => 'Update method not implemented yet.'], 501);
+        $wallet = Wallet::find($id);
+        
+        
     }
 
     /**

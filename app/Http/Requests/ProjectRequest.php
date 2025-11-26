@@ -23,13 +23,13 @@ class ProjectRequest extends FormRequest
     public function rules(): array
     {
 
-        $methods = $this->route()->getActionMethod();
+        $methods = $this->getActionMethod();
 
         switch ($methods) {
             case 'store':
                 return [
                     "name" => "required",
-                    "description" => "sometimes|nullable|required",
+                    "description" => "sometimes",
                     "state" => "required"
                     ];
             case "update":
@@ -39,9 +39,7 @@ class ProjectRequest extends FormRequest
                     "state" => "sometimes"
                     ];
             default:
-                return [
-                    "name"=> "Some thing",
-                ];
+                return [];
         }
         
         
