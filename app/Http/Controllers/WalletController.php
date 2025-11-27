@@ -58,7 +58,7 @@ class WalletController extends Controller
             return $this->errorResponse("Failed to create wallet");
         }
         
-        return $this->successResponse($wallet,"Wallet created successfully");
+        return $this->successResponse(null,"Wallet created successfully");
 
     }
 

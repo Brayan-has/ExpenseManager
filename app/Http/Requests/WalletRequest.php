@@ -23,17 +23,17 @@ class WalletRequest extends FormRequest
      */
     public function rules(): array
     {
-         $methods = $this->getActionMethod();
+         $methods = $this->method();
 
         switch ($methods) {
-            case 'store':
+            case 'POST':
                 return [
                     "name" => "required",
                     "origin" => "required",
                     "quantity" => "required",
                     "project_id" => "required|exists:projects,id"
                     ];
-            case "update":
+            case "PUT":
                 return [
                     "name" => "sometimes",
                     "origin" => "sometimes",
