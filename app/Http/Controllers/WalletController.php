@@ -17,11 +17,13 @@ class WalletController extends Controller
      */
     public function index()
     {
-
+        # page for add it at the cache key
+        $page = request("page",1);
+         
         // key of the cache for wallets 
-        $walletKey = "wallet_all";
-
+        $walletKey = "wallet_page_$page";
         $ttl = 60; // Time to live in seconds
+
 
         $wallet = Cache::tags(['wallets'])->remember($walletKey, $ttl, function(){
 
