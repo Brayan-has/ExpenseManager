@@ -13,6 +13,6 @@ class SavingSeeder extends Seeder
      */
     public function run(): void
     {
-        Saving::factory(2)->create();
+        Saving::factory(50)->create();
     }
 }

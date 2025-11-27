@@ -3,58 +3,74 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use App\Traits\Response;
+use App\Traits\Pagination;
 use App\Models\Saving;
+use App\Http\Requests\SAvingRequest;
 
 class SavingController extends Controller
 {
-    use Response;
+    use Response,Pagination;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
-        $saving = Saving::with(["user:id,name,lastname"])->get();
+        $page = request('page',1);
+        $savingKey = "savings_page_{$page}";
+        $ttl = 60;
+         
+        $savings = Cache::tags(['savings'])->remember($savingKey, $ttl, function(){
+            
+            $data = Saving::with(["user:id,name,lastname"])->paginate(10);
+            
+            if(!$data){
+                return $this->errorResponse("No savings found", 404);
+            }
+            return $data;
+        });
 
-        if(empty($saving)){
-            return $this->errorResponse("No savings found", 404);
-        }
-        return response()->json([
-            "message" => $saving
-        ]);
+        $paginate = $this->paginateData($savings);
+         
+        return $this->successResponse($paginate, "List of savings");
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(SavingRequest $request)
     {
-        //
-    }
+        $validate = $request->validated();
+        $saving = Saving::create($validate);
+        Cache::tags(['savings'])->flush();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+        if(!$saving)
+        {
+            return $this->errorResponse("Error creating saving");
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        return $this->successResponse(null, "Saving created successfully");
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(SavingRequest $request, string $id)
     {
-        //
+        $validate = $request->validated();
+        $saving = Saving::find($id);
+
+        if(!$saving)
+        {
+            return $this->errorResponse("saving not found");
+        }
+
+        $saving->update($validate);
+        Cache::tags(['savings'])->flush();
+
+        $saving->save();
+        return $this->successResponse(null, "saving updated successfully");
     }
 
     /**
@@ -62,6 +78,16 @@ class SavingController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $saving = Saving::find($id);
+
+        if(!$saving)
+        {
+            return $this->errorResponse("saving not found");
+        }
+
+        $saving->delete();
+        Cache::tags(['savings'])->flush();
+
+        return $this->successResponse(null, "saving deleted successfully");
     }
 }
