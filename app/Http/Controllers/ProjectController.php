@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Project;
 use App\Traits\Pagination;
 use App\Traits\Response;
+use App\Traits\Filter;
 use App\Http\Requests\ProjectRequest;
 use Illuminate\Support\Facades\Cache;
 
@@ -11,28 +12,40 @@ use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
-    use Response, Pagination;
+    use Response, Pagination, Filter;
    
     public function index()
     {
-        # Redis implementation
+
+        
+        $endpointData = ["id","name","description","state","start_date","final_date"];
+        $id = request("id");
+        // variable to get the data for search end filter any data needed 
+        $search = request("search");
+        
         //get the current page
         $page = request("page",1);
         
         // CacheKey
-        $cacheKey = "project_page_$page";
-
+        $cacheKey = "project_page_{$page}_search_" . md5($search ?? 'none').  "_id_". ($id ?? "none");
+        
         //
         $ttl = 60; 
         
-        $pagination = Cache::tags(['projects'])->remember($cacheKey, $ttl, function () {               
+        # Redis implementation
+        $pagination = Cache::tags(['projects'])->remember($cacheKey, $ttl, function () use ($search, $endpointData, $id) {               
 
+            
+            //consturctor of the queryBulder to get the projects 
+            $query = Project::query();
+            
+            // call of the trait filter to aplly filters at the query builder
             // get all projects with their wallets
-            $projects = Project::with(["wallet:id,name,origin,quantity,project_id"])->
-            select(["id","name","description","state","start_date","final_date"])->paginate(10);
+            $projects= $this->filters($search, $query, $endpointData,$id)-> with(["wallet:id,name,origin,quantity,project_id"])->
+            select($endpointData)->paginate(10)->appends(request()->query());
         
             // if there not projects found, show a message
-            if($projects->isEmpty()){
+            if(!$projects){
                 return $this->noData("No projects found");
             }
             
