@@ -5,7 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SavingController;
 use App\Http\Controllers\ProjectController; 
-use App\Http\Controllers\WalletController;   
+use App\Http\Controllers\WalletController;
+use App\Http\Controllers\ExpenseController;   
 
 
 Route::prefix("v0.1")->group(function(){
@@ -17,4 +18,6 @@ Route::prefix("v0.1")->group(function(){
     Route::resource("/projects",ProjectController::class);
     // Route for wallets
     Route::resource("/wallets",WalletController::class);
+    // Route for expenses
+    Route::resource("/expenses",ExpenseController::class);
 });

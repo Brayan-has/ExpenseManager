@@ -62,4 +62,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Saving::class);
     }
+
+    // Relation with User and Expenses
+    public function expenses():HasMany
+    {
+        return $this->hasMany(Expense::class);
+    }
 }

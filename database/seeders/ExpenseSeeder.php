@@ -13,6 +13,6 @@ class ExpenseSeeder extends Seeder
      */
     public function run(): void
     {
-        Expense::factory(2)->create();
+        Expense::factory(50)->create();
     }
 }
