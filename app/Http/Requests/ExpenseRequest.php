@@ -3,7 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException; 
 class ExpenseRequest extends FormRequest
 {
     /**
@@ -11,7 +12,7 @@ class ExpenseRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,7 +22,7 @@ class ExpenseRequest extends FormRequest
      */
     public function rules(): array
     {
-        $method = $this->getActionMethod();
+        $method = $this->method();
 
         switch ($method) {
             case 'POST':
@@ -29,13 +30,14 @@ class ExpenseRequest extends FormRequest
                     "name" => "required|string|max:255",
                     "description" => "nullable|string",
                     "value" => "required|numeric|min:0",
-                    "date" => "required|date",
+                    "date" => "sometimes",
                     "status" => "required|in:pending,paid,overdue",
                     "daily" => "boolean",
                     "by_week" => "boolean",
                     "by_month" => "boolean",
                     "annual" => "boolean",
                     "user_id" => "required|exists:users,id",
+                    "wallet_id" => "required|exists:wallets,id",
                 ];
             case 'PUT':
             case 'PATCH':
@@ -54,5 +56,16 @@ class ExpenseRequest extends FormRequest
             default:
                 return [];
         }
+    }
+    
+ protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(
+            response()->json([
+                'status'  => 422,
+                'message' => 'Validation Error',
+                'errors'  => $validator->errors()
+            ], 422)
+        );
     }
 }

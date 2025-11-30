@@ -1,11 +1,10 @@
 <?php
 
 namespace App\Traits;
-use Illuminate\Support\Facades\Cache;
-
+use App\Traits\Response;
 trait Filter
 {
-    //
+    use Response;
 
     public function filters($search, $query, $data, $id)
     {
@@ -23,15 +22,13 @@ trait Filter
                         }
                     }
                 });
-                
-                
-        }
-       
-        if($id){
-            $query->where("id",$id);
-        }
+            }
 
-
+            
+            if($id){
+                $query->where("id",$id);
+            }
+          
         return $query;
     }
 }

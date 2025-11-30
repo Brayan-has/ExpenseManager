@@ -20,7 +20,8 @@ class Expense extends Model
         "by_week",
         "by_month",
         "annual",
-        "user_id"
+        "user_id",
+        "wallet_id"
     ];
 
     // Relation with Expense and User

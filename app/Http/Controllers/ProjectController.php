@@ -15,9 +15,7 @@ class ProjectController extends Controller
     use Response, Pagination, Filter;
    
     public function index()
-    {
-
-        
+    {        
         $endpointData = ["id","name","description","state","start_date","final_date"];
         $id = request("id");
         // variable to get the data for search end filter any data needed 
@@ -118,6 +116,7 @@ class ProjectController extends Controller
         }
 
         $project->delete();
+        Cache::tags(['projects'])->flush();
 
         return $this->easyResponse("The project was delete it correctly");
 
