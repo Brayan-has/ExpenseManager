@@ -7,30 +7,40 @@ use Illuminate\Support\Facades\Cache;
 use App\Models\Wallet;
 use App\Traits\Pagination;
 use App\Traits\Response;
+use App\Traits\Filter;
 use App\Http\Requests\WalletRequest;
 
 class WalletController extends Controller
 {
-    use Response, Pagination;
+    use Response, Pagination, Filter;
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(WalletRequest $request)
     {
+        #filter section
+        $search = $request->input('search');
+        $id = $request->input('id');
+        $walletData = ['id','name','origin','quantity','project_id'];
+
+        #Cache section
         # page for add it at the cache key
         $page = request("page",1);
          
         // key of the cache for wallets 
-        $walletKey = "wallet_page_$page";
+        $walletKey = "wallet_page_{$page}_search_" . md5($search ?? 'none') . "_id_" . ($id ?? "none");
         $ttl = 60; // Time to live in seconds
 
 
-        $wallet = Cache::tags(['wallets'])->remember($walletKey, $ttl, function(){
+        $wallet = Cache::tags(['wallets'])->remember($walletKey, $ttl, function() use ($walletData, $search, $id){ 
 
             // return $wallet;
-            $wallet = Wallet::paginate(10);
+            $wallet = Wallet::query();
+            
+            $filter = $this->filters($search,$wallet, $walletData,$id)
+            ->select($walletData)->paginate(10)->appends(request()->query());
     
-            $wallet = $this->paginateData($wallet);
+            $wallet = $this->paginateData($filter);
             // If there's no data show an error message
             
             if (!$wallet){

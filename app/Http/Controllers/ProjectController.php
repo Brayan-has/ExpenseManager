@@ -29,7 +29,7 @@ class ProjectController extends Controller
         // CacheKey
         $cacheKey = "project_page_{$page}_search_" . md5($search ?? 'none').  "_id_". ($id ?? "none");
         
-        //
+        // 1 minute to expire the cache
         $ttl = 60; 
         
         # Redis implementation
@@ -41,7 +41,7 @@ class ProjectController extends Controller
             
             // call of the trait filter to aplly filters at the query builder
             // get all projects with their wallets
-            $projects= $this->filters($search, $query, $endpointData,$id)-> with(["wallet:id,name,origin,quantity,project_id"])->
+            $projects= $this->filters($search, $query, $endpointData,$id)->with(["wallet:id,name,origin,quantity,project_id"])->
             select($endpointData)->paginate(10)->appends(request()->query());
         
             // if there not projects found, show a message

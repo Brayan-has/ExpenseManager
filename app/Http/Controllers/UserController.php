@@ -8,25 +8,37 @@ use App\Models\User;
 use App\Http\Requests\UserRequest;
 use App\Traits\Response;
 use App\Traits\Pagination;
+use App\Traits\Filter;
 use Ramsey\Uuid\DeprecatedUuidMethodsTrait;
 
 class UserController extends Controller
 {
-    use Response,Pagination;
+    use Response,Pagination, Filter;
     /**
      * Display a listing of the resource.
      */
     public function index(UserRequest $request)
     {
+
+        #  filters section
+        $search = $request->input('search');
+        $id = $request->input('id');
+        $usersData = ['id','name','lastname','email','password'];
+
+        #cache key section
         $page = $request->input('page', 1);
         
-        $userKey = "users_page_{$page}";
+        $userKey = "users_page_{$page}_search_". md5($search ?? 'none') . "_id_" . ($id ?? 'none');
         $ttl = 60;
 
-        $usersData = Cache::tags(['users'])->remember($userKey, $ttl, function () {
-            $users = user::with('savings:id,project_name,user_id')->paginate(10);
+        $usersData = Cache::tags(['users'])->remember($userKey, $ttl, function () use ($usersData, $search,$id) {
+            
+            $users = user::query();
+              
+            $filters = $this->filters($search,$users,$usersData,$id)->select($usersData)->with('savings:id,project_name,user_id')->paginate(10);
 
-            return $this->paginateData($users);
+
+            return $this->paginateData($filters);
         });
 
         

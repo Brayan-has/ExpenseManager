@@ -6,29 +6,41 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use App\Traits\Response;
 use App\Traits\Pagination;
+use App\Traits\Filter;
 use App\Models\Saving;
 use App\Http\Requests\SAvingRequest;
 
 class SavingController extends Controller
 {
-    use Response,Pagination;
+    use Response,Pagination, Filter;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        //$savingData 
+        $savingData =['project_name','saving_value','status','user_id'];
+        // Request id for filter
+        $id = request('id');
+        //search variable
+        $search = request('search');
+
         $page = request('page',1);
-        $savingKey = "savings_page_{$page}";
+        $savingKey = "saving_page_{$page}_search_" . md5($search ?? 'none'). "_id_" . ($id ?? "none");
         $ttl = 60;
          
-        $savings = Cache::tags(['savings'])->remember($savingKey, $ttl, function(){
+        $savings = Cache::tags(['savings'])->remember($savingKey, $ttl, function() use ($savingData, $id,$search) {
             
-            $data = Saving::with(["user:id,name,lastname"])->paginate(10);
+            $data = Saving::query();
             
-            if(!$data){
+            //filter with pagination and relationships
+            $filters = $this->filters($search,$data,$savingData, $id)->select($savingData)->
+            with(["user:id,name,lastname"])->paginate(10)->appends(request()->query());
+            
+            if(!$filters){
                 return $this->errorResponse("No savings found", 404);
             }
-            return $data;
+            return $filters;
         });
 
         $paginate = $this->paginateData($savings);
