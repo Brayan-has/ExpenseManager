@@ -5,8 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator; 
 use Illuminate\Http\Exceptions\HttpResponseException;
-
-class WalletRequest extends FormRequest
+class UserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -19,33 +18,35 @@ class WalletRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illumiñnate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
-         $methods = $this->method();
 
-        switch ($methods) {
+        $method = $this->method();
+
+        switch($method) {
             case 'POST':
                 return [
-                    "name" => "required",
-                    "origin" => "required",
-                    "quantity" => "required",
-                    "project_id" => "required|exists:projects,id"
-                    ];
-            case "PUT":
+                    'name' => 'required|string|max:255',
+                    'lastname' => 'required|string|max:255',
+                    'email' => 'required|string|email|max:255|unique:users',
+                    'password' => 'required|string',
+                ];
+            case 'PUT':
                 return [
-                    "name" => "sometimes",
-                    "origin" => "sometimes",
-                    "quantity" => "sometimes",
-                    "project_id" => "sometimes|exists:projects,id"
-                    ];
+                    'name' => 'sometimes',
+                    'lastname' => 'sometimes',
+                    'email' => 'sometimes',
+                    'password' => 'sometimes',
+                ];
             default:
                 return [];
         }
+        
     }
 
-     protected function failedValidation(Validator $validator)
+    protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(
             response()->json([

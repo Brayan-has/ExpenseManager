@@ -25,6 +25,8 @@ return new class extends Migration
             $table->boolean("annual");
             $table->timestamp("created_at");
             $table->timestamp("updated_at");
+            $table->foreignId("user_id")->nullable()->constrained()->onDelete("cascade")->onUpdate("cascade");
+            $table->foreignId("wallet_id")->nullable()->constrained()->onDelete("cascade")->onUpdate("cascade");
 
         });
     }

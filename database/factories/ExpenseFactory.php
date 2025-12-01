@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\user;
+use App\Models\wallet;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Expense>
@@ -27,6 +29,8 @@ class ExpenseFactory extends Factory
             "by_week" => $this->faker->boolean(),
             "by_month" => $this->faker->boolean(),
             "annual" => $this->faker->boolean(),
+            "user_id" => user::query()->inRandomOrder()->value("id") ?? User::factory(), 
+            "wallet_id" => wallet::query()->inRandomOrder()->value("id") ?? User::factory(), 
         ];
     }
 }

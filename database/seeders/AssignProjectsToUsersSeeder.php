@@ -8,25 +8,25 @@ class AssignProjectsToUsersSeeder extends Seeder
 {
     public function run(): void
     {
-        // Obtener todos los usuarios y proyectos existentes
+        // get the users and the projects
         $users = User::all();
         $projects = Project::all();
 
-        // Si no hay registros, evitamos errores
+        // If theres's no registers show a worning
         if ($users->count() === 0 || $projects->count() === 0) {
-            $this->command->warn("No hay usuarios o proyectos en la base de datos.");
+            $this->command->warn("There are not projects and users in the database.");
             return;
         }
 
-        // Asignar proyectos a cada usuario
+        // Asign project to every user
         foreach ($users as $user) {
-            // Selecciona entre 1 y 3 proyectos aleatorios
+            // Select between 1 and 3 random projects
             $projectIds = $projects->random(rand(1, min(2, $projects->count())))->pluck('id');
 
-            // Insertar en la tabla pivote
+            // Insert into the privote project table
             $user->project()->syncWithoutDetaching($projectIds);
         }
 
-        $this->command->info("Proyectos asignados correctamente.");
+        $this->command->info("Project assigned correctly.");
     }
 }

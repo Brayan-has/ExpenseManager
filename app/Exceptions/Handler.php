@@ -68,7 +68,7 @@ class Handler extends ExceptionHandler
             case $e instanceof QueryException:
                 return response()->json([
                     "message" => "incorrect format",
-                    "error" => $e->errorInfo
+                    "error" => $e->getMessage()
                 ],400);
 
             case $e instanceof RoleDoesNotExist:

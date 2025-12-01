@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Project;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 USE Illuminate\Database\Eloquent\Factories\Hasfactory;
 
 class Wallet extends Model
@@ -23,4 +24,10 @@ class Wallet extends Model
     {
         return $this->belongsTo(Project::class);
     }
+    // Relation with Wallet and Expense
+    public function expenses(): HasMany
+    {
+        return $this->hasMany(Expense::class);
+    }
+    
 }

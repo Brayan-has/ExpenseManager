@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -19,9 +20,11 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
+        'lastname',
         'name',
         'email',
         'password',
+        'saving_id',
     ];
 
     /**
@@ -52,5 +55,17 @@ class User extends Authenticatable
     public function project():BelongsToMany
     {
         return $this->belongsToMany(Project::class,"project_related");
+    }
+
+    // Relation with User and Savings
+    public function savings():HasMany
+    {
+        return $this->hasMany(Saving::class);
+    }
+
+    // Relation with User and Expenses
+    public function expenses():HasMany
+    {
+        return $this->hasMany(Expense::class);
     }
 }
