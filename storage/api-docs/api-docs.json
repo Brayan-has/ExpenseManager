@@ -13,11 +13,181 @@
     "paths": {
         "/projects": {
             "get": {
-                "summary": "All projects for the Expend manager",
-                "operationId": "c5f2e95be5c3392de4391b95e6a0bd8e",
+                "tags": [
+                    "Projects"
+                ],
+                "summary": "All projects for the Expend manager with pagination and filtering",
+                "operationId": "8bef29199553f828dc7ed4def4908e8b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "Filter by project ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search term to filter projects",
+                        "schema": {
+                            "type": "string",
+                            "example": "project to save money"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "success"
+                        "description": "All projects with pagination and filters",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "content": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "message": {
+                                                        "type": "string",
+                                                        "example": "The list of projects"
+                                                    },
+                                                    "data": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "id": {
+                                                                    "type": "integer",
+                                                                    "example": 2
+                                                                },
+                                                                "name": {
+                                                                    "type": "string",
+                                                                    "example": "Andrew Demner"
+                                                                },
+                                                                "description": {
+                                                                    "type": "string",
+                                                                    "example": "Super important wallet description"
+                                                                },
+                                                                "state": {
+                                                                    "type": "string",
+                                                                    "example": "1984-09-09 00:00:00"
+                                                                },
+                                                                "final_date": {
+                                                                    "type": "string",
+                                                                    "example": "1984-09-09 00:00:00"
+                                                                },
+                                                                "wallet": {
+                                                                    "properties": {
+                                                                        "id": {
+                                                                            "type": "integer",
+                                                                            "example": 2
+                                                                        },
+                                                                        "name": {
+                                                                            "type": "string",
+                                                                            "example": "Lunch wallet"
+                                                                        },
+                                                                        "description": {
+                                                                            "type": "string",
+                                                                            "example": "Principal wallet"
+                                                                        },
+                                                                        "origin": {
+                                                                            "type": "string",
+                                                                            "example": "entry principal"
+                                                                        },
+                                                                        "quantity": {
+                                                                            "type": "integer",
+                                                                            "example": 18000000
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    },
+                                                    "current_page": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "per_page": {
+                                                        "type": "integer",
+                                                        "example": 10
+                                                    },
+                                                    "total": {
+                                                        "type": "integer",
+                                                        "example": 50
+                                                    },
+                                                    "next_page_url": {
+                                                        "type": "string",
+                                                        "example": "http://api.com/projects?page=2"
+                                                    },
+                                                    "prev_page_url": {
+                                                        "type": "string",
+                                                        "example": null
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Projects"
+                ],
+                "summary": "Create projects",
+                "operationId": "0e41c95a14992b67baca3e5e8ea751c7",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "description",
+                                    "state"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Sale enterprise"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Sale's company"
+                                    },
+                                    "state": {
+                                        "type": "string",
+                                        "example": "On progress"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Creation of the project",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Project created successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -36,6 +206,12 @@
     "security": [
         {
             "bearerAuth": []
+        }
+    ],
+    "tags": [
+        {
+            "name": "Projects",
+            "description": "Projects"
         }
     ]
 }

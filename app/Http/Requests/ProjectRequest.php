@@ -23,7 +23,7 @@ class ProjectRequest extends FormRequest
     public function rules(): array
     {
 
-        $methods = $this->getActionMethod();
+        $methods = $this->Method();
 
         switch ($methods) {
             case 'store':
