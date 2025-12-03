@@ -53,7 +53,7 @@ class ProjectDocs
      *                      property="wallet",
      *                      type="object",
      *                      @OA\Property(property="id", type="integer", example=2),
-     *                      @OA\Property(property="name", type="string", example=lunch wallet"),
+     *                      @OA\Property(property="name", type="string", example="lunch wallet"),
      *                      @OA\Property(property="description", type="string", example="Principal wallet"),
      *                      @OA\Property(property="origin", type="string", example="entry principal"),
      *                      @OA\Property(property="quantity", type="integer", example=18000000)
@@ -100,4 +100,69 @@ class ProjectDocs
      * )
      */
     public function store() {}
+
+    /**
+     * @OA\Put(
+     *  path="/projects/{id}",
+     *  tags={"Projects"},
+     *  summary="Update data from a project",
+     *  
+     * 
+     *  @OA\Parameter(
+     *      name="id",
+     *      in="path",
+     *      required=true,
+     *      @OA\Schema(type="integer", example=3)
+     *  ),
+     * 
+     *  @OA\RequestBody(
+     *      required=true,
+     *      @OA\JsonContent(
+     *          required={"name","description","state"},
+     *          @OA\Property(property="name", type="string", example="Sale enterprise"),
+     *          @OA\Property(property="description", type="string", example="Sale's company"),
+     *          @OA\Property(property="state", type="string", example="On progress"),
+     *          @OA\Property(property="start_date", type="date", example="1992-02-17 00:00:00"),
+     *          @OA\Property(property="final_date", type="date", example="final_date"),
+     *          @OA\Property(property="user_id", type="integer", example=3)
+     *      )
+     * ),
+     *
+     * @OA\Response(
+     *      response=200,
+     *      description="Updating the project data",
+     *      @OA\JsonContent(
+     *          @OA\Property(property="message", type="string", example="The project was updated correctly")
+     *      
+     *      )
+     * )
+     * 
+     * 
+     * )
+     */
+    public function update() {}
+
+    /**
+     * @OA\Delete(
+     *  path="/projects/{id}",
+     *  tags={"Projects"},
+     *  summary="Delete any project by the id",
+     * @OA\Parameter(
+     *  name="id",
+     *  in="path",
+     *  description="Delete",
+     *  required=true,
+     *  @OA\Schema(type="integer", example="2")
+     *  ),
+     *  
+     * @OA\Response(
+     *      response=200,
+     *      description="",
+     *      @OA\JsonContent(
+     *          @OA\Property(property="message", type="string", example="The project was deleted correctly")
+     *       )
+     *  )
+     * )
+     **/
+    public function delete() {}
 }

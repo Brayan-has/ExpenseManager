@@ -84,7 +84,7 @@
                                                                         },
                                                                         "name": {
                                                                             "type": "string",
-                                                                            "example": "Lunch wallet"
+                                                                            "example": "lunch wallet"
                                                                         },
                                                                         "description": {
                                                                             "type": "string",
@@ -182,6 +182,124 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Project created successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/projects/{id}": {
+            "put": {
+                "tags": [
+                    "Projects"
+                ],
+                "summary": "Update data from a project",
+                "operationId": "ba0a27d35877ce5f398a02e79a791b2d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 3
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "description",
+                                    "state"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Sale enterprise"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Sale's company"
+                                    },
+                                    "state": {
+                                        "type": "string",
+                                        "example": "On progress"
+                                    },
+                                    "start_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "1992-02-17 00:00:00"
+                                    },
+                                    "final_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "final_date"
+                                    },
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 3
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updating the project data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The project was updated correctly"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Projects"
+                ],
+                "summary": "Delete any project by the id",
+                "operationId": "a01d1a3ac6a7ae4b3ce6a90ebb92bcf2",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": "2"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The project was deleted correctly"
                                         }
                                     },
                                     "type": "object"
