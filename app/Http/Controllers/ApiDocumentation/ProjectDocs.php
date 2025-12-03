@@ -53,7 +53,7 @@ class ProjectDocs
      *                      property="wallet",
      *                      type="object",
      *                      @OA\Property(property="id", type="integer", example=2),
-     *                      @OA\Property(property="name", type="string", example="Lunch wallet"),
+     *                      @OA\Property(property="name", type="string", example=lunch wallet"),
      *                      @OA\Property(property="description", type="string", example="Principal wallet"),
      *                      @OA\Property(property="origin", type="string", example="entry principal"),
      *                      @OA\Property(property="quantity", type="integer", example=18000000)

@@ -29,7 +29,7 @@ class ProjectRequest extends FormRequest
             case 'store':
                 return [
                     "name" => "required",
-                    "description" => "sometimes",
+                    "description" => "sometimes|nullable",
                     "state" => "required"
                     ];
             case "update":
