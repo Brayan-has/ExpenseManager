@@ -695,6 +695,121 @@
                     }
                 }
             }
+        },
+        "/users": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "All logged users with pagination and filtering",
+                "operationId": "affc08095342ddb92766d3daf6b93aae",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "Filter by project ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search term to filter projects",
+                        "schema": {
+                            "type": "string",
+                            "example": "Andrew Demner"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "All users with pagination and filters",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "content": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "message": {
+                                                        "type": "string",
+                                                        "example": "The list of logged users"
+                                                    },
+                                                    "data": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "id": {
+                                                                    "type": "integer",
+                                                                    "example": 2
+                                                                },
+                                                                "name": {
+                                                                    "type": "string",
+                                                                    "example": "Andrew"
+                                                                },
+                                                                "lastname": {
+                                                                    "type": "string",
+                                                                    "example": "Demner"
+                                                                },
+                                                                "email": {
+                                                                    "type": "string",
+                                                                    "example": "Andrew@gmail.com"
+                                                                },
+                                                                "savings": {
+                                                                    "properties": {
+                                                                        "id": {
+                                                                            "type": "integer",
+                                                                            "example": 2
+                                                                        },
+                                                                        "project_name": {
+                                                                            "type": "string",
+                                                                            "example": "Chronicle Project"
+                                                                        },
+                                                                        "user_id": {
+                                                                            "type": "integer",
+                                                                            "example": "1"
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    },
+                                                    "current_page": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "per_page": {
+                                                        "type": "integer",
+                                                        "example": 10
+                                                    },
+                                                    "total": {
+                                                        "type": "integer",
+                                                        "example": 50
+                                                    },
+                                                    "next_page_url": {
+                                                        "type": "string",
+                                                        "example": "http://api.com/projects?page=2"
+                                                    },
+                                                    "prev_page_url": {
+                                                        "type": "string",
+                                                        "example": null
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -720,6 +835,10 @@
         {
             "name": "Projects",
             "description": "Projects"
+        },
+        {
+            "name": "Users",
+            "description": "Users"
         }
     ]
 }

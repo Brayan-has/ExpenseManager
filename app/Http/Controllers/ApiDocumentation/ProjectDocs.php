@@ -34,9 +34,6 @@ class ProjectDocs
      *          type="object",
      *          @OA\Property(property="content", type="array", @OA\Items(
      * 
-     * 
-     * 
-     * 
      *          @OA\Property(property="message", type="string", example="The list of projects"),
      *          @OA\Property(
      *              property="data",
