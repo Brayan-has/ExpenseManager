@@ -11,6 +11,392 @@
         }
     ],
     "paths": {
+        "/expenses": {
+            "get": {
+                "tags": [
+                    "Expenses"
+                ],
+                "summary": "All projects for the Expend manager with pagination and filtering",
+                "operationId": "50f7466850aa3ccd8bcc38fb2892d436",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "Filter by project ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search term to filter expenses",
+                        "schema": {
+                            "type": "string",
+                            "example": "Fugiat nesciunt voluptatibus libero molestiae."
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "All expenses with pagination and filters",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "content": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "message": {
+                                                        "type": "string",
+                                                        "example": "The list of expenses"
+                                                    },
+                                                    "data": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "id": {
+                                                                    "type": "integer",
+                                                                    "example": 2
+                                                                },
+                                                                "name": {
+                                                                    "type": "string",
+                                                                    "example": "Fugiat nesciunt voluptatibus libero molestiae."
+                                                                },
+                                                                "description": {
+                                                                    "type": "string",
+                                                                    "example": "List of expenses"
+                                                                },
+                                                                "value": {
+                                                                    "type": "integer",
+                                                                    "example": 500000
+                                                                },
+                                                                "date": {
+                                                                    "type": "string",
+                                                                    "example": "1984-09-09 00:00:00"
+                                                                },
+                                                                "status": {
+                                                                    "type": "string",
+                                                                    "example": "Pending"
+                                                                },
+                                                                "daily": {
+                                                                    "type": "boolean",
+                                                                    "example": "1"
+                                                                },
+                                                                "by_week": {
+                                                                    "type": "boolean",
+                                                                    "example": "0"
+                                                                },
+                                                                "by_moth": {
+                                                                    "type": "boolean",
+                                                                    "example": "0"
+                                                                },
+                                                                "annual": {
+                                                                    "type": "boolean",
+                                                                    "example": "0"
+                                                                },
+                                                                "user": {
+                                                                    "properties": {
+                                                                        "id": {
+                                                                            "type": "integer",
+                                                                            "example": 2
+                                                                        },
+                                                                        "name": {
+                                                                            "type": "string",
+                                                                            "example": "lunch wallet"
+                                                                        },
+                                                                        "lastname": {
+                                                                            "type": "string",
+                                                                            "example": "Principal wallet"
+                                                                        },
+                                                                        "email": {
+                                                                            "type": "string",
+                                                                            "example": "entry principal"
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
+                                                                },
+                                                                "wallet": {
+                                                                    "properties": {
+                                                                        "id": {
+                                                                            "type": "integer",
+                                                                            "example": 1
+                                                                        },
+                                                                        "name": {
+                                                                            "type": "string",
+                                                                            "example": "Agaval Wallet"
+                                                                        },
+                                                                        "origin": {
+                                                                            "type": "string",
+                                                                            "example": "Sales"
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    },
+                                                    "current_page": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "per_page": {
+                                                        "type": "integer",
+                                                        "example": 10
+                                                    },
+                                                    "total": {
+                                                        "type": "integer",
+                                                        "example": 50
+                                                    },
+                                                    "next_page_url": {
+                                                        "type": "string",
+                                                        "example": "http://api.com/projects?page=2"
+                                                    },
+                                                    "prev_page_url": {
+                                                        "type": "string",
+                                                        "example": null
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Expenses"
+                ],
+                "summary": "Create an expense resource",
+                "operationId": "7bcd824083b376c2303487e75adea149",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "description",
+                                    "value",
+                                    "date",
+                                    "status",
+                                    "daily",
+                                    "by_moth",
+                                    "by_week",
+                                    "annual",
+                                    "user_id",
+                                    "wallet_id"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Agaval Expenses"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Expenses from the Agaval company"
+                                    },
+                                    "value": {
+                                        "type": "integer",
+                                        "example": "500000000"
+                                    },
+                                    "date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "1984-09-09 00:00:00"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "Finished"
+                                    },
+                                    "daily": {
+                                        "type": "boolean",
+                                        "example": 1
+                                    },
+                                    "by_moth": {
+                                        "type": "boolean",
+                                        "example": 0
+                                    },
+                                    "by_week": {
+                                        "type": "boolean",
+                                        "example": 0
+                                    },
+                                    "annual": {
+                                        "type": "boolean",
+                                        "example": 0
+                                    },
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "wallet_id": {
+                                        "type": "integer",
+                                        "example": 3
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Expense created successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/expenses/{id}": {
+            "put": {
+                "tags": [
+                    "Expenses"
+                ],
+                "summary": "Update any data from expense by the expense id",
+                "operationId": "e28d4bc84dac29cf761591e9e81bbd4f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "1"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Agaval Expenses"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Expenses from the Agaval company"
+                                    },
+                                    "value": {
+                                        "type": "integer",
+                                        "example": "500000000"
+                                    },
+                                    "date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "1984-09-09 00:00:00"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "Finished"
+                                    },
+                                    "daily": {
+                                        "type": "boolean",
+                                        "example": 1
+                                    },
+                                    "by_moth": {
+                                        "type": "boolean",
+                                        "example": 0
+                                    },
+                                    "by_week": {
+                                        "type": "boolean",
+                                        "example": 0
+                                    },
+                                    "annual": {
+                                        "type": "boolean",
+                                        "example": 0
+                                    },
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "wallet_id": {
+                                        "type": "integer",
+                                        "example": 3
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The expense was updated correctly"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Expenses"
+                ],
+                "summary": "Delete an expense wallet by the expense id",
+                "operationId": "6d72fa78a7bb713a6a170ce7f5474935",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "id to eliminate the specific expense",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": "1"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "example": "The project was delete it correctly"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/projects": {
             "get": {
                 "tags": [
@@ -327,6 +713,10 @@
         }
     ],
     "tags": [
+        {
+            "name": "Expenses",
+            "description": "Expenses"
+        },
         {
             "name": "Projects",
             "description": "Projects"
