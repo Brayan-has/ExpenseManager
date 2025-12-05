@@ -114,6 +114,31 @@ class UserController extends Controller
         }
 
         $user->restore();
+        Cache::tags(["users"])->flush();
         return $this->easyResponse("Users restored successfully!");
+    }
+
+    // visualize all deleted users
+    public function UsersTrashed(UserRequest $request)
+    {
+        $userById= $request->input('id');
+        $page = $request->input('page', 1);
+        $search = $request->input('search');
+        $usersData = ['id','name','lastname','email','password'];
+
+        $ttl = 60;
+        $trashKey = "tras_user_page{$page}_serach". md5($search ?? 'none') . "_id_". ($id ?? 'none');
+        
+        $result = Cache::tags(["users"])->remember($trashKey, $ttl, function () use ($usersData,$search, $userById) { 
+
+            $query= User::onlyTrashed();
+
+            $filter = $this->filters($search,$query,$usersData,$userById)->select($usersData)->paginate(10);
+            
+            return $this->paginateData($filter);
+
+        });
+
+        return $this->successResponse($result,"Users deleted");
     }
 }

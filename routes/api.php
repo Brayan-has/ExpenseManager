@@ -11,9 +11,10 @@ use App\Http\Controllers\ExpenseController;
 
 Route::prefix("v0.1")->group(function(){
     // Route for users
-    Route::resource("/users",UserController::class);
+    Route::resource("/users",UserController::class)->except(["show"]);
     // Route for restore deleted users
     Route::post("/users/restore/{id}", [UserController::class,"restore"]);
+    Route::get("/trash", [UserController::class,"UsersTrashed"]);
     // Route for savings
     Route::resource("/savings", SavingController::class);
     // Route for projects
