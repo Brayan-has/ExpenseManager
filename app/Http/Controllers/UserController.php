@@ -67,7 +67,7 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserRequest $request, string $id)
+    public function update(UserRequest $request, int $id)
     {
         $validated = $request->validated();
         $user = User::find($id);
@@ -87,7 +87,7 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(int $id)
     {
         $user = User::find($id);
 
@@ -98,5 +98,22 @@ class UserController extends Controller
         $user->delete();
         Cache::tags(['users'])->flush();
         return $this->successResponse("null", "User deleted successfully.");
+    }
+
+    /**
+     * Restore an user
+     **/
+    public function restore(int $id)
+    {
+        $user = User::withTrashed()->where('id', $id);
+
+        // dd($user);
+        if(!$user)
+        {
+            return $this->noData("the id {$id} not found");
+        }
+
+        $user->restore();
+        return $this->easyResponse("Users restored successfully!");
     }
 }
