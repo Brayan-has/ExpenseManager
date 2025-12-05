@@ -19,7 +19,6 @@ class UserController extends Controller
      */
     public function index(UserRequest $request)
     {
-
         #  filters section
         $search = $request->input('search');
         $id = $request->input('id');
@@ -114,7 +113,7 @@ class UserController extends Controller
         }
 
         $user->restore();
-        Cache::tags(["users"])->flush();
+        Cache::tags(["users","trash"])->flush();
         return $this->easyResponse("Users restored successfully!");
     }
 
@@ -129,7 +128,7 @@ class UserController extends Controller
         $ttl = 60;
         $trashKey = "tras_user_page{$page}_serach". md5($search ?? 'none') . "_id_". ($id ?? 'none');
         
-        $result = Cache::tags(["users"])->remember($trashKey, $ttl, function () use ($usersData,$search, $userById) { 
+        $result = Cache::tags(["trash"])->remember($trashKey, $ttl, function () use ($usersData,$search, $userById) { 
 
             $query= User::onlyTrashed();
 
@@ -141,4 +140,21 @@ class UserController extends Controller
 
         return $this->successResponse($result,"Users deleted");
     }
+
+    // Frocing the users elimination by id
+    public function ForceDelete(int $id)
+    {
+        $user = User::withTrashed()->where('id', $id);;
+        if(!$user)
+        {
+            return $this->noData("The user with the id {$id} doesn't exist");
+        }
+
+        $user->forceDelete();
+
+        Cache::tags(["trash"])->flush();
+        return $this->easyResponse("Users eliminated definitely");
+    }
+
+
 }

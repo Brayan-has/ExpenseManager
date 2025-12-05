@@ -14,7 +14,10 @@ Route::prefix("v0.1")->group(function(){
     Route::resource("/users",UserController::class)->except(["show"]);
     // Route for restore deleted users
     Route::post("/users/restore/{id}", [UserController::class,"restore"]);
+    // Route for show all deleted users
     Route::get("/users/trash", [UserController::class,"UsersTrashed"]);
+    // route for delete definitely an user
+    Route::post("/users/delete/{id}", [UserController::class, "ForceDelete"]);
     // Route for savings
     Route::resource("/savings", SavingController::class);
     // Route for projects
