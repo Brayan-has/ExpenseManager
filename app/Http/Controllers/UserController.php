@@ -12,6 +12,7 @@ use App\Traits\Response;
 use App\Traits\Pagination;
 use App\Traits\Filter;
 use Ramsey\Uuid\DeprecatedUuidMethodsTrait;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class UserController extends Controller
 {
@@ -194,4 +195,28 @@ class UserController extends Controller
     }
 
 
+    public function getFile(string $filename): StreamedResponse
+    {
+        //get the file name and complete the full path
+        $path = 'files/img/' . $filename;
+
+        if (!Storage::disk('r2')->exists($path)) {
+            abort(404, 'File not found');
+        }
+
+        // mimetype tell the browser what kind of files extensión is going to get (png, jpng etc.)
+        $mimeType = Storage::disk('r2')->mimeType($path);
+
+        return response()->stream(
+            function () use ($path) {
+                $stream = Storage::disk('r2')->readStream($path);
+                fpassthru($stream);
+            },
+            200,
+            [
+                'Content-Type' => $mimeType,
+                'Cache-Control' => 'public, max-age=31536000',
+            ]
+        );
+    }
 }

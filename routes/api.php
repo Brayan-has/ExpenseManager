@@ -16,6 +16,8 @@ Route::prefix("v0.1")->group(function(){
     Route::post("/users/restore/{id}", [UserController::class,"restore"]);
     //
     Route::post("/users/files", [UserController::class, "files"]);
+    //
+    Route::get('/users/img/{name}', [UserController::class, 'getFile']);
     // Route for show all deleted users
     Route::get("/users/trash", [UserController::class,"UsersTrashed"]);
     // route for delete definitely an user
