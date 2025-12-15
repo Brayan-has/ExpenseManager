@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use App\Models\User; 
@@ -154,6 +156,41 @@ class UserController extends Controller
 
         Cache::tags(["trash"])->flush();
         return $this->easyResponse("Users eliminated definitely");
+    }
+
+    
+    // manage files
+    public function files(Request $request)
+    {
+        try {
+            // Verify the file exists
+            if (!$request->hasFile('file')) {
+                return $this->errorResponse("No file uploaded", 400);
+            }
+
+            $file = $request->file('file');
+            
+            // Generate an unique name
+            $fileName = time() . '_' . $file->getClientOriginalName(); #estudiar más esto
+            
+            // upload the file
+            $path = Storage::disk('r2')->putFileAs('files/img', $file, $fileName);
+            
+            // Get the URL
+            $url = Storage::disk('r2')->url($path);
+            
+            return response()->json([
+                'path' => $path,
+                'url' => $url,
+                'message' => 'File uploaded successfully'
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ], 500);
+        }
     }
 
 

@@ -103,4 +103,10 @@ class ExpenseController extends Controller
         return $this->easyResponse("The project was delete it correctly");
 
     }
+
+    // rest the expenses at the wallet price value
+    public function expensesWallet()
+    {
+        
+    }
 }
